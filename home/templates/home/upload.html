@@ -1,0 +1,241 @@
+{% extends 'home/base.html' %}
+
+{% load static %}
+
+{% block title %}Upload files{% endblock %}
+
+{% block css %}
+.upload {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+    position: relative;
+    padding: 84.5px 0 0 0;
+}
+
+.upload-container {
+    width: 400px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 80px;
+    z-index: 9999;
+}
+
+.upload-container {
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+    border: 5px solid #ff0000;
+    width: 500px;
+    height: 300px;
+    z-index: 10000;
+}
+
+.upload-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.upload-box {
+    height: 300px;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ddd;
+
+}
+
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%;
+    display: inline-block;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.bot-message {
+    background-color: #007bff;
+    color: #fff;
+    align-self: flex-start;
+}
+
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.toggle-button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.file-name {
+    flex: 1;
+}
+
+.delete-btn {
+    background-color: transparent;
+    border: none;
+    color: #f00;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#upload-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 5px;
+    align-self: center;
+}
+
+.mo {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.3;
+    z-index:9999;
+}
+
+{% endblock %}
+
+{% block content %}
+
+
+    <section class="hero" style="padding-top: 10px;">
+        <p style="text-align: left;">Uploaded files:</p>
+        <ul style="text-align: left;">
+            {% for obj in documentP %}
+              <li>
+                {{ obj.document.name }}
+                <small>(Uploaded at: {{ obj.uploaded_at }})</small>
+                  <em>#{{obj.description}}</em>
+              </li>
+            {% endfor %}
+        </ul>
+    <div class="upload">
+        <div class="upload-container hidden" id="upload-container">
+            <div class="upload-header">
+                <h1>File Upload</h1>
+                <button class="toggle-button" id="upload-toggle-button">✖️</button>
+            </div>
+            <div class="upload-box" id="upload-box">
+                <!-- File items will be appended here -->
+            </div>
+            <form  method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+<!--                {{form.as_p}}-->
+                <input type="text" id="text-input" name="description" placeholder="nhập chú thích">
+                <input type="file" id="file-input" name="document" accept="application/pdf">
+                <input type="submit" id="submit" style="display: none">
+                <p><button  id="upload-btn">Upload</button></p>
+            </form>
+
+    <!--        ................-->
+    <!--        <p>{{ response }}</p>-->
+    <!--        ................-->
+        </div>
+        <script>
+            {% if messages %}
+                {% for message in messages %}
+                    alert("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        </script>
+        <button class="minimized" id="minimized-upload" style="center center/cover; height: 100px; width: 100px;border: 0px; opacity: 50%; border-radius: 50%; position: fixed; right: 30%; top: 35%"><i class="bi bi-arrow-bar-up" style="font-size: 70px;"></i></button>
+<!--<div class="mo hidden" id="lamMo"></div>-->
+
+    </div>
+    </section>
+{% endblock%}
+
+{% block js %}
+document.getElementById('upload-btn').addEventListener('click', () => {
+    document.getElementById('submit').click();
+});
+
+document.getElementById('file-input').addEventListener('change', handleFileUpload);
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const fileName = file.name;
+        addFileItem(fileName);
+        ///////////////////////
+
+    }
+}
+
+function addFileItem(fileName) {
+    const uploadBox = document.getElementById('upload-box');
+    const fileItem = document.createElement('div');
+    fileItem.className = 'file-item';
+    fileItem.innerHTML = `
+        <span class="file-name">${fileName}</span>
+        <button class="delete-btn" onclick="deleteFileItem(this)">✖️</button>
+    `;
+    uploadBox.appendChild(fileItem);
+}
+
+function deleteFileItem(button) {
+    const fileItem = button.parentNode;
+    fileItem.parentNode.removeChild(fileItem);
+}
+
+document.getElementById('upload-toggle-button').addEventListener('click', () => {
+    toggleUpload();
+});
+
+document.getElementById('minimized-upload').addEventListener('click', () => {
+    toggleUpload();
+});
+
+function toggleUpload() {
+    const uploadContainer = document.getElementById('upload-container');
+    const minimizedUpload = document.getElementById('minimized-upload');
+    const nenMo = document.getElementById('lamMo');
+    if (uploadContainer.classList.contains('hidden')) {
+        uploadContainer.classList.remove('hidden');
+        nenMo.classList.remove('hidden');
+        minimizedUpload.classList.add('hidden');
+    } else {
+        uploadContainer.classList.add('hidden');
+        nenMo.classList.add('hidden');
+        minimizedUpload.classList.remove('hidden');
+    }
+}
+{% endblock %}

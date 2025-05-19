@@ -1,0 +1,197 @@
+{% extends 'admin/adminBase.html' %}
+
+{% load static %}
+
+{% block title %}admin/file{% endblock %}
+
+{% block content %}
+    <div class="pagetitle">
+      <h1>Quản lý file tải lên</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Quản lý file</a></li>
+          <li class="breadcrumb-item active">quản lý upload</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title"><b>Danh sách file</b></h3>
+			  <div style="display: flex; justify-content: flex-start; padding-left: 20px;">
+				<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+					<button type="button" id="addb" class="btn btn-success" ><i class="bi bi-plus-lg"></i></button>
+					<p> tải file lên </p>
+				</div>
+			  </div>
+			  <div class="card">
+            <div class="card-body row hide" id="addf" >
+              <h5 class="card-title">upload file</h5>
+
+              <!-- Vertical Form -->
+                <form  method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-12">
+                  <label for="file-input" class="form-label">Chọn file:</label>
+                   <input type="file" id="file-input" name="document" accept="application/pdf">
+                </div>
+                <div class="col-12">
+                  <label for="text-input" class="form-label">chú thích</label>
+                  <input type="text" id="text-input" name="description">
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Upload</button>
+                  
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+					<th>ID</th>
+
+                    <th>File</th>
+                    <th>Ngày upload</th>
+                    <th>Note</th>
+                    <th>hành động</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                {% for obj in documents %}
+                <div class="hide" id="id">{{obj.id}}</div>
+                    <tr>
+                        <td>{{ obj.id }}</td>
+                        <td><a href="{{ obj.document.url }}">{{ obj.document.name }}</a></td>
+                        <td>
+                            {{ obj.uploaded_at }}
+                        </td>
+                        <td>
+                            <div id="old-data{{obj.id}}" class="old-data">{{ obj.description }}</div>
+                            <input id="des{{obj.id}}" class="des-input hide" value="{{ obj.description }}" style="text-align: center; width: 90%;">
+                        </td>
+                        <td>
+                            <button type="button" id="{{obj.id}}" class="btn btn-outline-warning edit">Sửa</button>
+                            <form method="POST" action="{% url 'upload' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{obj.id}}">
+                                <input type="hidden" id="input-req{{obj.id}}" name="input-req" value="{{ obj.description }}">
+                                <button type="submit" id="ok{{obj.id}}" name="update_note" class="ok btn btn-outline-warning hide">OK</button>
+                            </form>
+                            <form method="POST" action="{% url 'upload' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{obj.id}}">
+                                <button type="submit" id="del{{obj.id}}" name="delete_document" class="del btn btn-outline-danger">Xoá</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+        <script>
+            {% if messages %}
+                {% for message in messages %}
+                    alert("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        </script>
+    </section>
+
+{% endblock %}
+
+{% block js %}
+<!-- <script> -->
+	document.getElementById('addb').addEventListener('click', () => {toggleUpload();});
+	function toggleUpload() {
+        const addForm = document.getElementById('addf');
+    
+
+        if (addForm.classList.contains('hide')) {
+            addForm.classList.remove('hide');
+   
+
+        } else {
+            addForm.classList.add('hide');
+        }
+    };
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".edit").forEach(function (button) {
+            button.addEventListener("click", function () {
+                if (this.textContent.trim() === "Sửa") {
+                    this.textContent = "Huỷ";
+                } else {
+                    this.textContent = "Sửa";
+                    console.log("this.id: " + this.id);
+                    document.getElementById("input-req" + this.id).value = document.getElementById("old-data" + this.id).textContent.trim();
+                }
+            });
+        });
+    });
+
+   
+    let e = document.getElementsByClassName('edit');
+    for (let i = 0; i < e.length; i++) {
+      e[i].addEventListener('click', () => {edit();});
+    }
+    
+    function edit() {
+        let id = event.target.id;
+        console.log("id của nút sửa: " + id);
+        let desInput = document.getElementById('des'+id);
+     
+            if (desInput.classList.contains('hide')) {
+                desInput.classList.remove('hide');
+            } else {
+                desInput.classList.add('hide');
+            }
+
+        let ok = document.getElementById('ok'+id);
+        if (ok.classList.contains('hide')) {
+            ok.classList.remove('hide');
+        } else {
+            ok.classList.add('hide');
+        }
+        let del = document.getElementById('del'+id);
+        if (del.classList.contains('hide')) {
+            del.classList.remove('hide');
+        } else {
+            del.classList.add('hide');
+        }
+        let oldData = document.getElementById('old-data'+id);
+        if (oldData.classList.contains('hide')) {
+            oldData.classList.remove('hide');
+        } else {
+            oldData.classList.add('hide');
+        }
+        let di = document.getElementById("des"+id);
+        let od = document.getElementById("old-data"+id);
+   
+          console.log("giá trị của ô input cũ: " + od.textContent.trim());
+          di.value = od.textContent.trim();
+        
+          di.addEventListener('input', () => {
+              console.log("id của trường sắp được thay dữ liệu: " + di.id);
+            document.getElementById("input-req"+id).value =di.value;
+            }
+          );
+        
+  };
+<!-- </script> -->
+{% endblock %}

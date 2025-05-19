@@ -1,0 +1,240 @@
+{% extends 'admin/adminBase.html' %}
+
+{% load static %}
+
+{% block title %}admin/account{% endblock %}
+
+{% block content %}
+    <div class="pagetitle">
+      <h1>Tài khoản</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Quản lý tài khoản</a></li>
+          <li class="breadcrumb-item active">Tài khoản</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title"><b>Danh sách tài khoản</b></h3>
+			  <!-- <div style="display: flex; justify-content: flex-start; padding-left: 20px;"> -->
+				<!-- <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;"> -->
+					<!-- <button type="button" id="addb" class="btn btn-success" ><i class="bi bi-plus-lg"></i></button> -->
+					<!-- <p> Thêm tài khoản</p> -->
+				<!-- </div> -->
+			  <!-- </div> -->
+			  <!-- <div class="card"> -->
+            <!-- <div class="card-body row hide" id="addf" > -->
+              <!-- <h5 class="card-title">Thêm tài khoản</h5> -->
+
+              <!-- Vertical Form -->
+                <!-- <form>
+                <div class="col-12">
+                  <label for="inputLName" class="form-label">Tên đăng nhập</label>
+                  <input type="text" class="form-control" id="inputLName">
+                </div>
+                <div class="col-12">
+                  <label for="inputPass" class="form-label">Mật khẩu</label>
+                  <input type="password" class="form-control" id="inputPass">
+                </div>
+                <div class="col-12">
+                  <label for="authoritySelect" class="form-label">Quyền</label>                              
+				  <select class="form-select" id="authoritySelect">
+					<option selected>Chọn quyền...</option>				 
+					<option value="1">Quản lý</option>
+					
+					<option value="2">Khách hàng</option>
+					
+				   </select>
+				 </div>
+                <div class="col-12">
+                  <label for="statusSelect" class="form-label">Trạng thái</label>
+                  
+                  <select class="form-select" id="statusSelect">
+					<option selected>Chọn trạng thái hoạt động...</option>				 
+					<option value="1">True</option>
+					<option value="2">False</option>
+					</select>
+              
+                </div>
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Thêm</button>
+                  
+                </div>
+              </form>Vertical Form -->
+
+            <!-- </div> -->
+          <!-- </div> -->
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+					<th>Mã tài khoản</th>
+
+                    <th>Tên đăng nhập</th>                  
+
+
+                    <th>Quyền</th>
+                    <th>Trạng thái</th>
+                    <th>hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for obj in users %}
+                    <tr>
+                        <td>{{ obj.id }}</td>
+                        <td>{{ obj.username }}</td>
+                        <td>
+                          <div id="selectedValue{{obj.id}}" data-value="{% if obj.is_superuser %}Superadmin{% elif obj.is_staff %}Staff{% else %}User{% endif %}">
+                            {% if obj.is_superuser %}Admin{% elif obj.is_staff %}Staff{% else %}User{% endif %}
+                          </div>
+                            <select  class="hide form-select" id="authoritySelect{{obj.id}}">
+                                <!-- <option id="selected" selected></option> -->
+                                <option value="Superadmin">Admin</option>
+                                <option value="Staff">Staff</option>
+                                <option value="User">User</option>
+                            </select>
+                        </td>
+                        <td>{{ obj.is_active }}</td>
+                        <td>
+                            <button type="button" id="{{obj.id}}" class="edit btn btn-outline-warning">Sửa</button>
+                            <form method="POST" action="{% url 'account' %}" style="display: inline;">
+                              {% csrf_token %}
+                              <input type="hidden" name="id" value="{{obj.id}}">
+                              <input type="hidden" id="newauth{{obj.id}}" name="newauth" value="">
+                              <button type="submit" id="ok{{obj.id}}" name="update_auth" class="ok btn btn-outline-warning hide">OK</button>
+                            </form>
+                            <form method="POST" action="{% url 'account' %}" style="display: inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{obj.id}}">
+                                <button type="submit" name="delete_account" id="del{{obj.id}}" class="btn btn-outline-danger">Xoá</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+				  
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+        <script>
+            {% if messages %}
+                {% for message in messages %}
+                    alert("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        </script>
+    </section>
+
+{% endblock %}
+
+{% block js %}
+	/* document.getElementById('addb').addEventListener('click', () => {toggleUpload();});
+	function toggleUpload() {
+    const addForm = document.getElementById('addf');
+    
+
+    if (addForm.classList.contains('hide')) {
+        addForm.classList.remove('hide');
+   
+
+    } else {
+        addForm.classList.add('hide');
+       
+    }
+  } */
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".edit").forEach(function (button) {
+        button.addEventListener("click", function () {
+            if (this.textContent.trim() === "Sửa") {
+                this.textContent = "Huỷ";
+            } else {
+                this.textContent = "Sửa";
+                console.log("this.id: " + this.id);
+                //hoàn trả giá trị khi bấm huỷ
+                document.getElementById("authoritySelect" + this.id).value = document.getElementById("selectedValue" + this.id).textContent.trim();
+            }
+        });
+    });
+  });
+  window.onload = function() {
+    getValue();
+  }
+  function getValue () {
+    let e = document.getElementsByClassName('edit');
+    for (let i = 0; i < e.length; i++) {
+      id = e[i].id;
+      let select = document.getElementById("authoritySelect"+id);
+      let selectedDiv = document.getElementById("selectedValue"+id); 
+      let selectedValue = selectedDiv.getAttribute("data-value");
+      // Duyệt qua các option để đặt giá trị mặc định
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === selectedValue) {
+          select.options[i].selected = true;
+          break;
+        }
+      }
+    };
+  }
+  let e = document.getElementsByClassName('edit');
+  for (let i = 0; i < e.length; i++) {
+    e[i].addEventListener('click', () => {edit();});
+  }
+    function edit() {
+        let id = event.target.id;
+        console.log("id của nút sửa: " + id);
+        
+        // document.getElementById('selected').setAttribute('value', document.getElementById('selectedValue').value);
+        document.getElementById('authoritySelect'+id).addEventListener('change', function() {
+          let selected = document.getElementById('selected'+id);
+          let selectedValue = document.getElementById('selectedValue'+id);
+          
+          selectedValue.setAttribute('data-value', this.value);
+        });
+        
+        let select = document.getElementById('authoritySelect'+id);
+          if (select.classList.contains('hide')) {
+            select.classList.remove('hide');
+          } else {
+            select.classList.add('hide');
+          }
+        let selected = document.getElementById('selectedValue'+id);
+          if (selected.classList.contains('hide')) {
+            selected.classList.remove('hide');
+          } else {
+            selected.classList.add('hide');
+          }
+        let ok = document.getElementById('ok'+id);
+          if (ok.classList.contains('hide')) {
+            ok.classList.remove('hide');
+          } else {
+            ok.classList.add('hide');
+          }
+        let del = document.getElementById('del'+id);
+          if (del.classList.contains('hide')) {
+            del.classList.remove('hide');
+          } else {
+            del.classList.add('hide');
+          }
+        let no = document.getElementById("newauth"+id);
+        let ot = document.getElementById("authoritySelect"+id);
+        no.value =ot.value;
+          ot.addEventListener('change', () => {
+            no.value =ot.value;
+          });
+    }
+    
+{% endblock %}

@@ -1,0 +1,288 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link rel="icon" href="{% static 'images/icon.png' %}" type="image/x-icon" >
+  <title>{% block title %} {% endblock %}</title>
+
+
+    <style> {% block css %} {% endblock %}</style>
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/quill/quill.snow.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/quill/quill.bubble.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/simple-datatables/style.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'css/styleGoD.css' %}" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Sidebar ======= -->
+
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'home' %}">
+          <i class="bi bi-chat-text"></i><span>CHAT</span>
+        </a>
+      </li>
+
+
+<!--     <li class="nav-heading">Documents</li>-->
+<!--        <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" data-bs-target="#2025-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-menu-button-wide"></i><span>2025</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="2025-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">-->
+<!--          {% for obj in documents %}-->
+<!--            {% if obj.uploaded_at.year == 2025 %}-->
+<!--                <li>-->
+<!--                    <label>{{ obj.id }}. </label>-->
+<!--                    <a href="{{ obj.document.url }}" style="padding-left: 0px;">{{ obj.document.name }}</a>-->
+<!--                    <small>(Time: {{ obj.uploaded_at }})</small>-->
+<!--                </li>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+
+<!--        </ul>-->
+<!--      </li>&lt;!&ndash; End Components Nav &ndash;&gt;-->
+
+<!--         <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" data-bs-target="#2024-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-menu-button-wide"></i><span>2024</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="2024-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">-->
+<!--          {% for obj in documents %}-->
+<!--            {% if obj.uploaded_at.year == 2024 %}-->
+<!--                <li>-->
+<!--                    <label>{{ obj.id }}. </label>-->
+<!--                    <a href="{{ obj.document.url }}" style="padding-left: 0px;">{{ obj.document.name }}</a>-->
+<!--                    <small>(Time: {{ obj.uploaded_at }})</small>-->
+<!--                </li>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+<!--            </ul>-->
+<!--      </li>&lt;!&ndash; End Components Nav &ndash;&gt;-->
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" data-bs-target="#2023-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-menu-button-wide"></i><span>2023</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="2023-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">-->
+<!--          {% for obj in documents %}-->
+<!--            {% if obj.uploaded_at.year == 2023 %}-->
+<!--                <li>-->
+<!--                    <label>{{ obj.id }}. </label>-->
+<!--                    <a href="{{ obj.document.url }}" style="padding-left: 0px;">{{ obj.document.name }}</a>-->
+<!--                    <small>(Time: {{ obj.uploaded_at }})</small>-->
+<!--                </li>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+
+<!--        </ul>-->
+<!--      </li>&lt;!&ndash; End Components Nav &ndash;&gt;-->
+<!--        <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" data-bs-target="#2022-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-menu-button-wide"></i><span>2022</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="2022-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">-->
+<!--          {% for obj in documents %}-->
+<!--            {% if obj.uploaded_at.year == 2022 %}-->
+<!--                <li>-->
+<!--                    <label>{{ obj.id }}. </label>-->
+<!--                    <a href="{{ obj.document.url }}" style="padding-left: 0px;">{{ obj.document.name }}</a>-->
+<!--                    <small>(Time: {{ obj.uploaded_at }})</small>-->
+<!--                </li>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+
+<!--        </ul>-->
+<!--      </li>&lt;!&ndash; End Components Nav &ndash;&gt;-->
+<!--        <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" data-bs-target="#2021-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-menu-button-wide"></i><span>2021</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="2021-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">-->
+<!--          {% for obj in documents %}-->
+<!--            {% if obj.uploaded_at.year == 2021 %}-->
+<!--                <li>-->
+<!--                    <label>{{ obj.id }}. </label>-->
+<!--                    <a href="{{ obj.document.url }}" style="padding-left: 0px;">{{ obj.document.name }}</a>-->
+<!--                    <small>(Time: {{ obj.uploaded_at }})</small>-->
+<!--                </li>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+
+<!--        </ul>-->
+<!--      </li>&lt;!&ndash; End Components Nav &ndash;&gt;-->
+<!--        <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" data-bs-target="#2020-nav" data-bs-toggle="collapse" href="#">-->
+<!--          <i class="bi bi-menu-button-wide"></i><span>2020</span><i class="bi bi-chevron-down ms-auto"></i>-->
+<!--        </a>-->
+<!--        <ul id="2020-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">-->
+<!--          {% for obj in documents %}-->
+<!--            {% if obj.uploaded_at.year == 2020 %}-->
+<!--                <li>-->
+<!--                    <label>{{ obj.id }}. </label>-->
+<!--                    <a href="{{ obj.document.url }}" style="padding-left: 0px;">{{ obj.document.name }}</a>-->
+<!--                    <small>(Time: {{ obj.uploaded_at }})</small>-->
+<!--                </li>-->
+<!--            {% endif %}-->
+<!--          {% endfor %}-->
+
+<!--        </ul>-->
+<!--      </li>&lt;!&ndash; End Components Nav &ndash;&gt;-->
+
+<!--      <li class="nav-heading">manage</li>-->
+
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" href="upload">-->
+<!--          <i class="bi bi-file-earmark-pdf"></i>-->
+<!--          <span>Upload file</span>-->
+<!--        </a>-->
+<!--      </li>&lt;!&ndash; End Profile Page Nav &ndash;&gt;-->
+
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" href="{% url 'select_file' %}">-->
+<!--          <i class="bi bi-check2-circle"></i>-->
+<!--          <span>Chọn file</span>-->
+<!--        </a>-->
+<!--      </li>&lt;!&ndash; End F.A.Q Page Nav &ndash;&gt;-->
+
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" href="{% url 'register' %}">-->
+<!--          <i class="bi bi-card-list"></i>-->
+<!--          <span>Register</span>-->
+<!--        </a>-->
+<!--      </li>&lt;!&ndash; End Register Page Nav &ndash;&gt;-->
+
+<!--      <li class="nav-item">-->
+<!--        <a class="nav-link collapsed" href="{% url 'login' %}">-->
+<!--          <i class="bi bi-box-arrow-in-right"></i>-->
+<!--          <span>Login</span>-->
+<!--        </a>-->
+
+<!--      </li>&lt;!&ndash; End Login Page Nav &ndash;&gt;-->
+       {% if not user.is_authenticated %}
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{% url 'login' %}">
+                <i class="bi bi-person-lines-fill"></i>
+                <span>Login</span>
+            </a>
+        </li><!-- End Login Page Nav -->
+      {% endif %}
+      </ul>
+
+
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+<section class="section">
+      <div class="row" style="margin-right: 0px;">
+        <div class="col-lg-12" style="padding-right: 0px;">
+
+          <div class="card">
+            <div class="card-body" style="height: 100vh">
+
+<div class="nav-link" style=" font-size: 20px;float: right; padding-right: 20px; padding-top:10px;" data-bs-toggle="dropdown">
+    {% if request.user.is_authenticated %}
+    <ul class="sidebar-nav" >
+        <li class="nav-item" >
+          <a class="nav-link collapsed" id="prb">
+              <i class="bi bi-person-circle"></i>
+             <span>{{ request.user.username }}</span>
+          </a>
+        </li>
+    </ul>
+
+    {% endif %}
+</div>
+
+  <i class="bi bi-list toggle-sidebar-btn" style="font-size: 25px;"></i>
+
+  <h5 class="card-title">ChatGoD</h5>
+  <p style="margin-bottom: 0;">------------------</p>
+  <p></p>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile" data-popper-placement="bottom-end" style>
+            <li class="dropdown-header">
+              <h6>{{ request.user.username }}</h6>
+              <span>{{ request.user.authority }}</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul>
+    <div style="text-align: right; float: right; padding-right: 20px" class="hide">
+          <a href="{% url 'logout' %}">
+            <button type="button" class="btn btn-outline-danger">Đăng xuất</button>
+          </a>
+    </div>
+                <p style="font-size: 0px;">[căn chỉnh]</p>
+        {% block content %}
+        {% endblock %}
+
+</div>
+
+            </div>
+
+          </div>
+      </div>
+</section>
+  </main><!-- End #main -->
+
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/apexcharts/apexcharts.min.js' %}"></script>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/quill/quill.js' %}"></script>
+  <script src="{% static 'vendor/simple-datatables/simple-datatables.js' %}"></script>
+  <script src="{% static 'vendor/tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static 'vendor/php-email-form/validate.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Template Main JS File -->
+  <script src="{% static 'js/scriptGoD.js' %}"></script>
+  <script>
+    {% block js %}
+
+    {% endblock %}
+  </script>
+</body>
+
+</html>

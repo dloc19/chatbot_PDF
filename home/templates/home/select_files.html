@@ -1,0 +1,34 @@
+{% extends 'home/base.html' %}
+
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<h3>Chọn các file từ kho lưu trữ:</h3>
+<form id="selectForm">
+    {% csrf_token %}
+    <ul>
+        {% for file in files %}
+            <li>
+                <input type="checkbox" name="selected_files" value="{{ file.document.url }}">
+                {{ file.document.name }} {{ file.description }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <button type="button" id="saveSelection">Lưu lựa chọn</button>
+</form>
+
+
+
+{% endblock %}
+{% block js %}
+    document.getElementById('saveSelection').addEventListener('click', function () {
+        const selectedFiles = [];
+        document.querySelectorAll('input[name="selected_files"]:checked').forEach(file => {
+            selectedFiles.push(file.value);
+        });
+
+        localStorage.setItem('selectedFiles', JSON.stringify(selectedFiles));
+        alert("Lưu lựa chọn thành công!");
+    });
+{% endblock %}
