@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ```
 
 ### 2. Environment
-Copy .ven  .env, update with API keys:
+Copy .env, update with API keys:
 ```env
 GEMINI_API_KEY=your_key_here
 GOOGLE_API_KEY=your_key_here
