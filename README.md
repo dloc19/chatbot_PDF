@@ -98,7 +98,7 @@ CREATE DATABASE chat_bot;
 2. **Update `.env`:**
 ```env
 DB_ENGINE=django.db.backends.mysql
-DB_NAME=chat_bot
+DB_NAME=your_db
 DB_USER=root
 DB_PASSWORD=your_password
 DB_HOST=localhost
