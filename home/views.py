@@ -166,8 +166,27 @@ def chatGoD(request):
     if request.method == "POST":
         if "clear_history" in request.POST:
             request.session.pop("chat_history", None)
-            Answer.objects.all().delete()
+            if request.user.is_authenticated:
+                Answer.objects.filter(uploaded_by=request.user).delete()
             return render(request, 'home/chatGoD.html', {"answer": None})
+
+        if "delete_answer" in request.POST:
+            try:
+                answer_id = request.POST.get("id")
+                answer = get_object_or_404(Answer, id=answer_id)
+                
+                if answer.uploaded_by == request.user or request.user.is_staff:
+                    answer.delete()
+                    messages.success(request, "Xóa lịch sử hội thoại thành công!")
+                    logger.info(f"User {request.user.username} xóa answer {answer_id}")
+                else:
+                    messages.error(request, "Bạn không có quyền xóa lịch sử này.")
+                    logger.warning(f"User {request.user.username} cố xóa answer của user khác")
+                    
+            except Exception as e:
+                logger.error(f"Lỗi xóa answer: {e}")
+                messages.error(request, "Có lỗi khi xóa lịch sử.")
+            return redirect('home')
 
         question = request.POST.get("question", "").strip()
         if not question:
@@ -191,16 +210,14 @@ def chatGoD(request):
 
             # Lưu vào database nếu user đã đăng nhập
             if request.user.is_authenticated:
-                form_data = {
-                    "ask_content": question,
-                    "answer_content": answer_text
-                }
-                form = AnswerForm(form_data)
-                if form.is_valid():
-                    answer_obj = form.save(commit=False)
-                    answer_obj.uploaded_by = request.user
-                    answer_obj.save()
-                    logger.info(f"Lưu answer cho user {request.user.username}")
+                answer_obj = Answer(
+                    ask_content=question,
+                    answer_content=answer_text,
+                    context=context,
+                    uploaded_by=request.user
+                )
+                answer_obj.save()
+                logger.info(f"Lưu answer cho user {request.user.username} (answer_id={answer_obj.id})")
             else:
                 messages.warning(request, "Bạn cần đăng nhập để lưu lịch sử trò chuyện.")
                 
@@ -208,7 +225,13 @@ def chatGoD(request):
             logger.error(f"Lỗi trong chatGoD: {e}")
             messages.error(request, f"Lỗi: {str(e)}")
 
-    return render(request, 'home/chatGoD.html', {"answer": Answer.objects.last()})
+    # Lấy lịch sử hội thoại của user nếu đã đăng nhập
+    if request.user.is_authenticated:
+        answers = Answer.objects.filter(uploaded_by=request.user).order_by('-ask_at')[:10]
+    else:
+        answers = []
+
+    return render(request, 'home/chatGoD.html', {"answer": Answer.objects.last(), "answers": answers})
 
 
 def admin_check(user):

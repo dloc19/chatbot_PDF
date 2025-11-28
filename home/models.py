@@ -29,6 +29,7 @@ class Answer(models.Model):
     ask_at = models.DateTimeField(auto_now_add=True, help_text="Thời gian hỏi")
     answer_content = models.TextField(help_text="Nội dung câu trả lời")
     answer_at = models.DateTimeField(auto_now_add=True, help_text="Thời gian trả lời")
+    context = models.TextField(blank=True, null=True, help_text="Context (chunks liên quan) được dùng để tạo câu trả lời")
     uploaded_file = models.FileField(upload_to='', blank=True, null=True, help_text="File được tham chiếu (optional)")
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, help_text="User đặt câu hỏi")
 
